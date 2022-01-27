@@ -33,3 +33,10 @@ git flow 공부하다보면 꼭 보는 유명한 그림이라 우선 첨부!
 
 <img width="388" alt="스크린샷 2022-01-27 오후 3 39 25" src="https://user-images.githubusercontent.com/98507062/151305259-c96dc9c2-c0e8-40b1-aa9a-961f2638d90c.png">
 
+
+
+**참고링크**
+
+[우린 Git-flow를 사용하고 있어요 | 우아한형제들 기술블로그](https://techblog.woowahan.com/2553/)
+
+[git flow model](https://www.youtube.com/watch?v=EzcF6RX8RrQ)
