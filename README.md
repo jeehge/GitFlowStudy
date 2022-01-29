@@ -2,7 +2,7 @@
 
 목표 : Git Flow 공부해보자!
 
-**직접 해보자!**
+**직접 해보자!** 
 - Sourcetree
 - Terminal
 
