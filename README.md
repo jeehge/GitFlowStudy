@@ -17,6 +17,9 @@ Git flow가 사용하는 branch는 크게 두 가지가 있다.
 
 `main branch`에는 `master`와 `develop`가 있고
 
+Git Flow 에서 master 브랜치는 언제나 사용자에게 친숙해야하며, 이와 병렬로 함께 나가는 developer 브랜치와 함께 무한한 생명주기를 가진다. 
+
+
 `sub branch`에는 `feature`, `release`, `hotfix`가 있다
 
 - master : 빌드가 되어야 함. 제품 출시 할 수 있은 branch.
