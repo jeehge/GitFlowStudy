@@ -31,15 +31,23 @@ git flow 공부하다보면 꼭 보는 유명한 그림이라 우선 첨부!
 
 
 
-**직접 해보자!** 
+# **직접 해보자!**  -> ever 제공 pdf 자료
+
+## Sourcetree
+
+- 공부 진행해야 함
 
 <br>
 
-# Sourcetree
-
-# Terminal
+## Terminal
 
 ### Feature branch
+
+* develop 브랜치로부터 분기
+* develop 브랜치로 머지되어야 함
+* Feature 브랜치는 *곧 또는 미래에 있을 업데이트에 대한 새로운 기능 개발*을 위해 사용된다. 이 브랜치가 생성되었다고 해서 해당 기능이 어떤 release에 반영될 지 바로 정해지는 것은 아니다. 이 브랜치는 정말 해당 기능이 개발 단게에 있지만, 추후 develop에 머지될 것이라는 것을 의미한다. (마찬가지로 반영될 수도 있고, 제거될 수도 있다.)
+
+<br>
 
 - 새로운 feature 브랜치 생성
 
@@ -71,10 +79,19 @@ $ git push origin develop
 
 오른쪽의 경우 어떤 커밋들이 병합되었는지에 대한 git history를 확인하는 것이 불가능하다. 따라서 이 경우에는 모든 로그 메시지를 분석하여 어떤 feature에 대한 작업이 이루어졌는지를 수동으로 확인해야 하는 불편함이 있다. 
 
+<br>
 
 ### Release branch
 
+* develop 브랜치로부터 분기
+* develop 및 master 브랜치로 머지되어야 함
+* Release 브랜치는 *새로운 production release에 대한 준비*를 위하여 사용하는 브랜치이다. 마이너 버그 픽스, 버전 변경(프로젝트) 등의 메타데이터 변경에 대한 것도 이 브랜치에서 수행한다.
+* develop 브랜치에서 release 브랜치로 분기하는 최적의 상황은 새로운 업데이트(release)에 대한 요구가 거의 다 반영되었을 경우이다. 최소한 새 릴리즈를 위해 개발된 feature 브랜치들이 develop에 머지된 상태여야 한다.
+* develop 브랜치는 다음 업데이트에 대한 내용을 반영하고 있지만, 어떤 버전으로 출시될지에 대한 정보는 불분명하다. 따라서 develop 브랜치에 반영된 기능의 범위에 따라 release 브랜치 생성 시에 버전을 정해주도록 하는 것이 좋다.
+
 - Release 브랜치 생성
+
+Release 브랜치는 develop 브랜치로부터 생성된다. 에를들어 현재 버전이 1.1.5이고 다음 큰 규모의 업데이틀 준비하고 있다 가정하며, develop 브랜치가 release 하기 위한 준비가 되어 있을 경우 우리는 다음 버전을 1.2(1.1.6 또는 2.0이 아닌)로 정할 수 있을 것이다. 따라서 새로운 버전 넘버를 반영하여 아래와 같이 브랜치를 생성할 수 있다.
 
 ```
 $ git checkout -b release-1.2 develop
@@ -99,12 +116,97 @@ master 브랜치에 release 브랜치를 머지하였다는 것은 다음 업데
 
 머지 후 해당 업데이트 버전으로 tag를 작성하면 해당 버전에 대한 업데이트가 마무리되고 다음 업데이트를 준비할 수 있다.
 
+아래의 코드는 1.2 버전에 대한 release 브랜치 머지 및 태깅하는 명령어이다. (태깅은 일반적으로 릴리즈 시에 작성한다고 나와있으나, git 또는 프로젝트에서 어떤 의미로 사용되는지 알아보아야 함)
+
+```
+- Master 브랜치에 머지 및 태깅
+$ git checkout master
+# 'master' 브랜치로 전환
+
+$ git merge --no-ff release-1.2
+# release 브랜치 머지
+
+$ git tag -a 1.2
 
 
+- Develop 브랜치에 머지
+$ git checkout develop
+# 'develop' 브랜치로 전환
+
+$ git merge --no-ff release-1.2
+# 머지
+
+
+- 위의 두 과정을 마친 후 release 브랜치를 제거해주도록 하자
+$ git branch -d release-1.2
+# Deleted branch release-1.2 (was ff452fe).
+```
+
+<br>
+
+### Hotfix branch
+
+* master 브랜치로부터 분기
+* develop 및 master 브랜치로 머지되어야 함
+* 핫픽스 블내치는 의도치 않게 새로운 production release를 만든다는 점에서 release 블내치와 비슷한 면이 있다. 이 브랜치는 현재 배포된 버전에서 *긴급하게 발견된 오류 또는 의도치 않은 상황에 대한 수정*이 필요한 경우 사용한다.
+
+
+![스크린샷 2022-02-03 오전 12 38 47](https://user-images.githubusercontent.com/8108570/152186180-3a67e341-3841-4f5d-b12a-13893d68b10c.png)
+
+위의 그림에서 확인할 수 있듯이, 릴리즈 브랜치와 비슷하지만 정말 긴급한 수정사항이 있을 때 master branch에서 분기하여 작업 후 develop 및 master 브랜치로 머지하게 된다. 
+
+
+- Hotfix branch 생성하기
+
+예를들어 1.2 버전에 대한 hotfix를 만들어야 한다면, 마스터 브랜치에서 문제가 발생한 버전에 블내치를 생성하여 체크아웃한다.
+
+```
+$ git checkout -b hotfix-1.2.1 master
+# 새 브랜치 "hotfix-1.2.1" 생성 및 전환
+# 1.2.1 버전으로 수정 (Xcode 또는 AndroidStudio)
+
+$ git commit -a -m "Bumped version number to 1.2.1"
+# [hotfix-1.2.1 41e61bb] Bumped version number to 1.2.1 
+# 1 files changed, 1 insertions(+), 1 deletions(-)
+```
+
+브랜치 생성 후 버전을 올리는 것을 절대 잊지 말고 작업ㅇ르 진행하도록 하자
+
+위의 작업을 통해 새 hotfix 브랜치 생성 및 버그 수정에 대한 커밋이 모두 완료되었다면, 다시 master 및 develop 브랜치로 머지해준다.
+
+```
+- 마스터 브랜치에 머지 및 태깅
+$ git checkout master
+# 'master'로 전환
+
+$ git merge --no-ff hotfix-1.2.1
+# hotfix 머지
+
+$ git tag -a 1.2.1
+# 해당 버전에 대한 태그 지정
+
+
+- 디벨롭 브랜치에 머지
+$ git checkout develop
+# 'develop' 로 전환
+
+$ git merge --no-ff hotfix-1.2.1
+# hotfix 머지
+
+
+- 브랜치 제거
+$ git branch -d hotfix-1.2.1
+# Deleted branch hotfix-1.2.1 (was abbe5d6)
+```
+
+
+*여기서 만약 버그 픽스 이전에 이미 해당 업데이트 버전에 대한 Release 브랜치가 있을 경우* hotfix에 대한 변경 사항을 develop 브랜치가 아닌 release 브랜치에 머지하도록 한다. 이렇게 하면 hotfix에 대한 수정사항도 포함하여 release 머지 시 develop 및 master 브랜치에 포함될 것이다.  
 
 
 
 **참고링크**
+
+[A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/)
 
 [우린 Git-flow를 사용하고 있어요 | 우아한형제들 기술블로그](https://techblog.woowahan.com/2553/)
 
